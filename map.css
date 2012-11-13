@@ -18,3 +18,12 @@ html, body {
   }
 }
 
+.mapMarker {
+	width: 200px;
+	height: 200px;
+}
+
+.mapMarker > img {
+	width: 150px;
+}
+

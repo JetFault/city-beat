@@ -9,9 +9,7 @@
     <script>
 			var map, pointarray, heatmap;
 
-			var lastZoomLevel;
-			var lastHeatRadius;
-
+			var heatRadiusZoom = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 20, 30, 55, 105, 200, 377.7, 734.567, 1400];
 
 
 			function getVenueData() {
@@ -49,21 +47,42 @@
 
 			function onZoomChange(event) {
 				var currZoomLevel = map.getZoom();
-				var currHeatRadius = heatmap.radius;
+				//var currHeatRadius = heatmap.radius;
 
-				var maxZoomLevel = 15;
 				
-				var offset = currHeatRadius * currZoomLevel/maxZoomLevel;
-
-				if(lastZoomLevel > currZoomLevel) {
-					offset = lastHeatRadius * lastZoomLevel/maxZoomLevel;
-					offset *= -1;
+				var newHeatRadius;
+				if(currZoomLevel >= heatRadiusZoom.length) {
+					newHeatRadius = heatRadiusZoom[heatRadiusZoom.length - 1];
+				} else {
+					newHeatRadius = heatRadiusZoom[currZoomLevel];
 				}
-				var newHeatRadius = currHeatRadius + offset;
-				if (newHeatRadius < 15) newHeatRadius = 15;
+				
+
+				//console.log("Radius: " + newHeatRadius + " ZoomLevel: " + currZoomLevel);
+
 				heatmap.setOptions({radius: newHeatRadius });
-				lastZoomLevel = currZoomLevel;
-				lastHeatRadius = currHeatRadius;
+			}
+
+			function onMouseClick(event) {
+				var lat = event.latLng.lat();
+				var lng = event.latLng.lng();
+				console.log("Lat: " + lat);
+				console.log("Lng: " + lng);
+
+				var content = '<div class="mapMarker"><img src="http://www.visitingdc.com/images/times-square-picture.jpg"></div>';
+
+				content = $(content).append("<p>" + "Lat: " + lat + " Lng: " + lng + "</p>");
+
+
+				console.log(content.prop('outerHTML'));
+
+				var markerOptions = {
+					position: event.latLng,
+					content: content.prop('outerHTML')
+				};
+
+				var marker = new google.maps.InfoWindow(markerOptions);
+				marker.open(map);
 			}
 
       function initialize() {
@@ -80,6 +99,7 @@
 				mapOptions);
 
 				google.maps.event.addListener(map, 'zoom_changed', onZoomChange);
+				google.maps.event.addListener(map, 'click', onMouseClick);
 
         pointArray = new google.maps.MVCArray();
 
@@ -87,7 +107,7 @@
 					data: pointArray,
         });
 
-				heatmap.setOptions({radius: 50});
+				heatmap.setOptions({radius: 55});
 
 				lastHeatRadius = 50;
 
