@@ -3,155 +3,32 @@
   <head>
     <meta charset="utf-8">
     <title>Google Maps JavaScript API v3 Example: Heatmap Layer</title>
-    <link href="map.css" rel="stylesheet">
 		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=visualization"></script>
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script>
-			var map, pointarray, heatmap;
 
-			var heatRadiusZoom = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 20, 30, 55, 105, 200, 377.7, 734.567, 1400];
+    <link href="css/app.css" rel="stylesheet"/>
+    <script src="js/app.js"></script>
 
-
-			function getVenueData() {
-				var my_url = 'http://' + window.location.host + '/citybeat-backend';
-				var crawler_url = my_url + '/get_current_heatmap';
-
-				venue_data = [];
-
-				$.ajax({
-					url : crawler_url,
-					type : 'GET',
-					success : function(data) {
-						var venues = $.parseJSON(data);
-						for(var i = 0; i < venues.length; i++) {
-							var venue = venues[i];
-							var lat = venue[0];
-							var lon = venue[1];
-							var checkins = venue[2];
-
-
-							if(checkins > 0) {
-								var venue_heat = {location: new google.maps.LatLng(lat, lon), weight: checkins};
-								venue_data.push(venue_heat);
-							}
-						}
-
-						heatmap.setData(new google.maps.MVCArray(venue_data));
-						console.log(heatmap.getData().getLength());
-					},
-					error : function() {
-						console.log('error getting data');
-					}
-				});
-			}
-
-			function onZoomChange(event) {
-				var currZoomLevel = map.getZoom();
-				//var currHeatRadius = heatmap.radius;
-
-				
-				var newHeatRadius;
-				if(currZoomLevel >= heatRadiusZoom.length) {
-					newHeatRadius = heatRadiusZoom[heatRadiusZoom.length - 1];
-				} else {
-					newHeatRadius = heatRadiusZoom[currZoomLevel];
-				}
-				
-
-				//console.log("Radius: " + newHeatRadius + " ZoomLevel: " + currZoomLevel);
-
-				heatmap.setOptions({radius: newHeatRadius });
-			}
-
-			function onMouseClick(event) {
-				var lat = event.latLng.lat();
-				var lng = event.latLng.lng();
-				console.log("Lat: " + lat);
-				console.log("Lng: " + lng);
-
-				var content = '<div class="mapMarker"><img src="http://www.visitingdc.com/images/times-square-picture.jpg"></div>';
-
-				content = $(content).append("<p>" + "Lat: " + lat + " Lng: " + lng + "</p>");
-
-
-				console.log(content.prop('outerHTML'));
-
-				var markerOptions = {
-					position: event.latLng,
-					content: content.prop('outerHTML')
-				};
-
-				var marker = new google.maps.InfoWindow(markerOptions);
-				marker.open(map);
-			}
-
-      function initialize() {
-
-        var mapOptions = {
-          zoom: 13,
-          center: new google.maps.LatLng(40.740737, -73.959961),
-					mapTypeId: google.maps.MapTypeId.ROADMAP,
-				};
-
-				lastZoomLevel = 13;
-
-        map = new google.maps.Map(document.getElementById('map_canvas'),
-				mapOptions);
-
-				google.maps.event.addListener(map, 'zoom_changed', onZoomChange);
-				google.maps.event.addListener(map, 'click', onMouseClick);
-
-        pointArray = new google.maps.MVCArray();
-
-        heatmap = new google.maps.visualization.HeatmapLayer({
-					data: pointArray,
-        });
-
-				heatmap.setOptions({radius: 55});
-
-				lastHeatRadius = 50;
-
-				heatmap.setMap(map);
-				getVenueData();
-      }
-
-      function toggleHeatmap() {
-        heatmap.setMap(heatmap.getMap() ? null : map);
-      }
-
-      function changeGradient() {
-        var gradient = [
-          'rgba(0, 255, 255, 0)',
-          'rgba(0, 255, 255, 1)',
-          'rgba(0, 191, 255, 1)',
-          'rgba(0, 127, 255, 1)',
-          'rgba(0, 63, 255, 1)',
-          'rgba(0, 0, 255, 1)',
-          'rgba(0, 0, 223, 1)',
-          'rgba(0, 0, 191, 1)',
-          'rgba(0, 0, 159, 1)',
-          'rgba(0, 0, 127, 1)',
-          'rgba(63, 0, 91, 1)',
-          'rgba(127, 0, 63, 1)',
-          'rgba(191, 0, 31, 1)',
-          'rgba(255, 0, 0, 1)'
-        ]
-        heatmap.setOptions({
-          gradient: heatmap.get('gradient') ? null : gradient
-        });
-      }
-
-      function changeOpacity() {
-        heatmap.setOptions({opacity: heatmap.get('opacity') ? null : 0.2});
-      }
-    </script>
+    <script src="js/lightbox.js"></script>
+    <link href="css/lightbox.css" rel="stylesheet" />
   </head>
 
   <body onload="initialize()">
     <div id="map_canvas" style="height: 95%; width: 100%;"></div>
     <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-    <button onclick="changeGradient()">Change gradient</button>
+    <!--<button onclick="changeGradient()">Change gradient</button>-->
     <button onclick="changeOpacity()">Change opacity</button>
+    <button id="changeData" onclick="changeData()">Display Instagram Data</button>
+
+    <div id="iw-body">
+      <div class="iw-images">
+        <div class="iw-lightbox"></div>
+      </div>
+      <div class="iw-percent">
+        <div class="arrow"></div><span class="percentage"></span>
+      </div>
+    </div>
+
   </body>
 </html>
 
