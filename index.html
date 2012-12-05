@@ -7,10 +7,19 @@
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
 
     <link href="css/app.css" rel="stylesheet"/>
+    <link href="css/jquery.lightbox-0.5.css" rel="stylesheet" media="screen" />
+
+    <script type="text/javascript" src="js/infobubble.js"></script>
+    <script type="text/javascript" src="js/jquery.lightbox-0.5.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        $('a.lightbox').lightBox();
+      });
+    </script>
+
     <script src="js/app.js"></script>
 
-    <script src="js/lightbox.js"></script>
-    <link href="css/lightbox.css" rel="stylesheet" />
+
   </head>
 
   <body onload="initialize()">

@@ -1,6 +1,13 @@
 var map, pointarray, heatmap, heatmap_neg;
 
-var info_window = new google.maps.InfoWindow;
+var info_window = new InfoBubble({
+  minWidth: 280,
+  arrowStyle: 0,
+  arrowPositon: 96,
+  arrowSize: 13,
+  borderRadius: 0});
+    
+                                 
 
 var venues = [];
 
@@ -15,7 +22,7 @@ var is_iw_open = false;
 var instagram = false;
 
 
-function getVenueData(instagram) {
+function setHeatmap(instagram) {
 	var my_url = 'http://' + window.location.host + '/citybeat-backend';
 	var crawler_url = my_url + '/get_foursquare_heatmap';
 
@@ -83,7 +90,7 @@ function setInfoContent(infoWindow, lat, lng) {
   };
 
   var getImages = function(lat, lng, cb) {
-    var images = [{title: "Times Square Sample Pic", url: "http://www.visitingdc.com/images/times-square-picture.jpg"}];
+    var images = [{title: "Times Square Sample Pic", url: "http://www.visitingdc.com/images/times-square-picture.jpg"}, {title: "Times Square Sample Pic 2", url: "http://www.visitingdc.com/images/times-square-picture.jpg"}];
 
     cb(images);
   };
@@ -102,7 +109,7 @@ function setInfoContent(infoWindow, lat, lng) {
     /* Create HTML */
     var image_lightboxes = '';
     for(var i = 0; i < images.length; i++) {
-      var a_box = '<a href="' + images[i].url + '" rel="lightbox[pics]" title="' +
+      var a_box = '<a href="' + images[i].url + '" class="lightbox" title="' +
         images[i].title + '"></a>';
 
       image_lightboxes += a_box;
@@ -164,9 +171,8 @@ function onZoomChange(event) {
 function onMouseClick(event) {
   
   //Close the old window
-  if(is_iw_open) {
+  if(info_window.isOpen()) {
     info_window.close();
-    is_iw_open = false;
     return;
   }
 
@@ -180,7 +186,8 @@ function onMouseClick(event) {
 
   info_window.setPosition(event.latLng);
   info_window.open(map);
-  is_iw_open = true;
+
+  setTimeout(function(){$("a.lightbox", info_window.bubble_).lightBox();}, 1000);
 }
 
 function initialize() {
@@ -258,7 +265,7 @@ function initialize() {
 	heatmap.setMap(map);
   heatmap_neg.setMap(map);
   changeDataType(instagram);
-	getVenueData();
+	setHeatmap();
 }
 
 function toggleHeatmap() {
@@ -272,7 +279,7 @@ function changeOpacity() {
 function changeData() {
     instagram = !instagram;
     getVenueData(instagram);
-    changeDataType(instagram);
+    setHeatmap(instagram);
 }
 
 function changeDataType(instagram) {
