@@ -2,21 +2,19 @@ var map, pointarray, heatmap, heatmap_neg;
 
 var info_window = new InfoBubble({
   minWidth: 280,
+  minHeight: 280,
   arrowStyle: 0,
   arrowPositon: 96,
   arrowSize: 13,
-  borderRadius: 0});
+  borderRadius: 0,
+  backgroundClassName: 'iw'});
     
-                                 
-
 var venues = [];
 
 var venue_data = [];
 var venue_data_neg = [];
 
 var heatRadiusZoom = [5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10, 20, 30, 55, 105, 200, 377.7, 734.567, 1400];
-
-var is_iw_open = false;
 
 //IF we should display instagram data or 4sq
 var instagram = false;
@@ -198,10 +196,45 @@ function initialize() {
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 	};
 
+  var styles = [
+    {
+      "elementType": "geometry.fill",
+      "stylers": [
+        { "lightness": -48 },
+        { "saturation": -80 }
+      ]
+    },
+    {
+      "featureType": "road",
+      "stylers": [
+        { "visibility": "simplified" },
+        { "hue": "#00c3ff" },
+        { "saturation": -8 }
+      ]
+    },
+    {
+      "featureType": "transit",
+      "stylers": [
+        { "visibility": "off" }
+      ]
+    },
+    {
+      "featureType": "administrative",
+      "stylers": [
+        { "visibility": "on" },
+        { "weight": 0.1 },
+        { "saturation": -100 },
+        { "lightness": 91 }
+      ]
+    }
+  ];
+
 	lastZoomLevel = 13;
 
 	map = new google.maps.Map(document.getElementById('map_canvas'),
 			mapOptions);
+
+  map.setOptions({styles:styles});
 
 	google.maps.event.addListener(map, 'zoom_changed', onZoomChange);
 	google.maps.event.addListener(map, 'click', onMouseClick);
@@ -277,9 +310,10 @@ function changeOpacity() {
 }
 
 function changeData() {
+  console.log(instagram);
     instagram = !instagram;
-    getVenueData(instagram);
     setHeatmap(instagram);
+    changeDataType(instagram);
 }
 
 function changeDataType(instagram) {

@@ -67,6 +67,10 @@ html, body {
   border-top: 20px solid red;
 } 
 
+#iw {
+  border-bottom: 10px solid red;
+}
+
 #iw-body {
   display:none;
 }
