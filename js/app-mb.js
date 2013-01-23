@@ -22,6 +22,12 @@ function d3layer() {
        .style("margin-left", "0px")
        .style("margin-top", "0px") && (first=false);
 
+    /* Adjust svg size on resize, fixes issue with cropping when resized */
+    $(window).resize(function() {
+      svg.attr("width", layer.map.dimensions.x)
+       .attr("height", layer.map.dimensions.y);
+    });
+
     var coords = function(d) {
       return layer.project(d.geometry.coordinates);
     };
