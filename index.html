@@ -2,42 +2,25 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Google Maps JavaScript API v3 Example: Heatmap Layer</title>
-		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=visualization"></script>
+    <title>City Beat</title>
+
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src='http://api.tiles.mapbox.com/mapbox.js/v0.6.7/mapbox.js'></script>
 
-    <link href="css/app.css" rel="stylesheet"/>
+    <!-- Styles -->
+    <link href="css/app-mb.css" rel="stylesheet"/>
     <link href="css/jquery.lightbox-0.5.css" rel="stylesheet" media="screen" />
+    <link href='http://api.tiles.mapbox.com/mapbox.js/v0.6.7/mapbox.css' rel='stylesheet'/>
 
-    <script type="text/javascript" src="js/infobubble.js"></script>
-    <script type="text/javascript" src="js/jquery.lightbox-0.5.js"></script>
-    <script type="text/javascript">
-      $(function() {
-        $('a.lightbox').lightBox();
-      });
-    </script>
 
-    <script src="js/app.js"></script>
-
+    <script src='http://d3js.org/d3.v3.min.js'></script>
 
   </head>
 
-  <body onload="initialize()">
-    <div id="map_canvas" style="height: 95%; width: 100%;"></div>
-    <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-    <!--<button onclick="changeGradient()">Change gradient</button>-->
-    <button onclick="changeOpacity()">Change opacity</button>
-    <button id="changeData" onclick="changeData()">Display Instagram Data</button>
+  <body>
+    <div id="map" style="height: 100%; width: 100%;"></div>
 
-    <div id="iw-body">
-      <div class="iw-images">
-        <div class="iw-lightbox"></div>
-      </div>
-      <div class="iw-percent">
-        <div class="arrow"></div><span class="percentage"></span>
-      </div>
-    </div>
-
+    <script src="js/app-mb.js"></script>
   </body>
 </html>
 
